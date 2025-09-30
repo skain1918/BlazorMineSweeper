@@ -1,0 +1,98 @@
+﻿@page "/"
+@page "/p/{Pars}"
+
+<PageTitle>MineSweeper</PageTitle>
+
+<h2>Find all mines.</h2>
+
+@if (mineField == null || mineField.CurrentGameState == GameState.Loading) {
+    <p>Loading...</p>
+}
+else {
+    <div>
+        <table class="table" cellpadding="0" cellspacing="0">
+
+            @for (int y = 0; y < mineField.Height; y++) {
+                <tr>
+                    @for (int x = 0; x < mineField.Width; x++) {
+                        var cell = mineField.Cells[x, y];
+                        <td>
+                            @if (cell.IsRevealed) {
+                                <div class="cell cellRevealed@(cell.CssClass)">
+                                    @switch (cell.CellType) {
+                                        case 9:
+                                        <span>X</span>
+                                        break;
+                                        case 0:
+                                        <span>&nbsp;</span>
+                                        break;
+                                        default:
+                                        <span>@cell.CellType</span>
+                                        break;
+                                    }
+                                </div>
+                            }
+                            else if(mineField.CurrentGameState == GameState.Playing) {
+                                @* oncontextmenu --- mouse right button click event --- preventdefault don't show rightclick menu*@
+                                <div class="cell cellCovered"
+                                     @onclick="() => cell.Reveal(true)"
+                                     @oncontextmenu="() => cell.ToggleFlag()"
+                                     @oncontextmenu:preventDefault>
+                                    @(cell.IsFlagged ? "!" : "")
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="cell cellCovered">
+                                     @(cell.IsFlagged ? "!" : "")
+                                </div>
+                            }
+
+
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+    @if(mineField.CurrentGameState == GameState.Won)
+    {
+        <h3 class="won">You're amazing!!!</h3>
+    }else if(mineField.CurrentGameState == GameState.Lost)
+    {
+        <h3 class="lost">Oooops!</h3>
+    }
+    <button type="button" @onclick="()=>mineField.CreateField()">Restart</button>
+}
+
+@code {
+    MineField mineField;
+    [Parameter]
+    public string? Pars { get; set; }
+    //OnInitialized is called when the component is initialized.
+    override protected void OnInitialized() {
+        mineField = new MineField() {
+            Width = 15,
+            Height = 15,
+            MineCount = 10,
+        };
+        if (!String.IsNullOrWhiteSpace(Pars))
+        {
+            var prms = Pars.Split('x')
+                .Select(x => (int.TryParse(x, out int i) ? i : 0))
+                .Where(x => x > 0)
+                .ToArray();
+            if (prms.Length == 1)
+                mineField.MineCount = prms[0];
+            if (prms.Length == 2)
+                (mineField.Height, mineField.Width, mineField.MineCount) = (prms[0], prms[0], prms[1]);
+            if (prms.Length == 3)
+                (mineField.Height, mineField.Width, mineField.MineCount) = (prms[0], prms[1], prms[2]);
+
+        }
+        mineField.CreateField();
+        base.OnInitialized();
+
+    }
+}

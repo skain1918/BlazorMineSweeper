@@ -1,0 +1,79 @@
+﻿.table {
+    border: 1px solid black;
+}
+
+.cell {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid dimgray;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.cellRevealed {
+    background-color: #eeeeee;
+}
+
+.cellCovered {
+    background-color: #cccccc;
+    cursor: pointer;
+    color: red;
+}
+
+.mine {
+    background-color: black;
+    color: white;
+}
+
+.fire {
+    background-color: red;
+}
+
+.n-1 {
+    color: blue;
+}
+
+.n-2 {
+    color: green;
+}
+
+.n-3 {
+    color: red;
+}
+
+.n-4 {
+    color: navy;
+}
+
+.n-5 {
+    color: darkred;
+}
+
+.n-6 {
+    color: darkcyan;
+}
+
+.n-7 {
+    color: black;
+}
+
+.n-8 {
+    color: gray;
+}
+
+h3 {
+    font-size: 3rem;
+}
+
+    h3.won {
+        color: forestgreen;
+    }
+
+    h3.lost {
+        color: darkred;
+    }
